@@ -21,6 +21,7 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
     }
 
     let mut stage = Stages::Start;
+    let mut source = String::new();
 
     'tokenizer: loop {
         let current = match slice.peek() {
@@ -78,8 +79,13 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 _ => { break 'tokenizer; },
             },
         }
+
+        if stage != Stages::AfterUnicode {
+            source.push(current);
+        }
+        println!("{} - {:?}", source, stage);
     }
 
-    Ok(Json::String(token, "".to_string()))
+    Ok(Json::String(token, source))
 }
 

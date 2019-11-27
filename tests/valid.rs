@@ -6,7 +6,9 @@ use simple_json::{ Json, Number };
 macro_rules! test {
     ($T: ty, $jsn:expr, $val:expr) => {{
         let json = Json::parse($jsn).unwrap();
+        let source: String = json.to_source();
         let val: $T = json.into();
+        assert_eq!($jsn, source);
         assert_eq!(val, $val);
     }};
 }
@@ -66,34 +68,34 @@ fn valid_exponent_number()
     test!(f64, "-21.12e2",  -21.12e2);
 }
 
-//#[test]
-//fn valid_string()
-//{
-    //test!(String,
-        //"\"\"",
-        //String::from("")
-    //);
+#[test]
+fn valid_string()
+{
+    test!(String,
+        "\"\"",
+        String::from("")
+    );
 
-        //test!(String,
-        //"\"This is a normal ASCII string.\"",
-        //String::from("This is a normal ASCII string.")
-    //);
+        test!(String,
+        "\"This is a normal ASCII string.\"",
+        String::from("This is a normal ASCII string.")
+    );
 
-    //test!(String,
-        //"\"I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).\"",
-        //String::from("I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).")
-    //);
+    test!(String,
+        "\"I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).\"",
+        String::from("I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).")
+    );
 
-        //test!(String,
-        //"\"I can escape some things, like \\\"\\\\\\/\\b\\f\\n\\r\\t!\"",
-        //String::from("I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!")
-    //);
+        test!(String,
+        "\"I can escape some things, like \\\"\\\\\\/\\b\\f\\n\\r\\t!\"",
+        String::from("I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!")
+    );
 
-        //test!(String,
-        //"\"I can even escape unicode: \\u3042.\"",
-        //String::from("I can even escape unicode: あ.")
-    //);
-//}
+        test!(String,
+        "\"I can even escape unicode: \\u3042.\"",
+        String::from("I can even escape unicode: あ.")
+    );
+}
 
 //#[test]
 //fn valid_array()

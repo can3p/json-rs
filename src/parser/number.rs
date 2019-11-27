@@ -25,12 +25,15 @@ pub fn number(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
 
     let mut stage       = Stages::Sign;
     let mut is_unsigned = true;
+    let mut source      = String::new();
 
     'tokenizer: loop {
         let current = match slice.peek() {
             Some(chr) => *chr,
             None      => { break 'tokenizer },
         };
+
+        source.push(current);
 
         match stage {
             // Waiting for sign or number.
@@ -121,7 +124,7 @@ pub fn number(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 Number::Float(token.parse::<f64>().unwrap())
             },
         },
-        "".to_string()
+        source
     ))
 }
 
