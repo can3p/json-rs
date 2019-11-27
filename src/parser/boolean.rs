@@ -38,6 +38,6 @@ pub fn boolean(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::Boolean(value))
+    Ok(Json::Boolean(value, "".to_string()))
 }
 

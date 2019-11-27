@@ -120,7 +120,8 @@ pub fn number(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
             _ => {
                 Number::Float(token.parse::<f64>().unwrap())
             },
-        }
+        },
+        "".to_string()
     ))
 }
 

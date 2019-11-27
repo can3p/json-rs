@@ -19,6 +19,6 @@ pub fn null(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::Null)
+    Ok(Json::Null("".to_string()))
 }
 

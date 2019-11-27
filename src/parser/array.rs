@@ -77,6 +77,6 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::Array(array))
+    Ok(Json::Array(array, "".to_string()))
 }
 

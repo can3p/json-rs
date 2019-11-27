@@ -45,7 +45,7 @@ pub fn object(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 _   => {
                     stage = Stages::Colon;
                     index = match string(slice) {
-                        Ok(Json::String(index)) => index,
+                        Ok(Json::String(index, _)) => index,
                         Err(e) => { return Err(e); },
                         _      => { return Err(Error::InvalidCharacter(current.to_string())); }
                     };
@@ -91,6 +91,6 @@ pub fn object(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::Object(object))
+    Ok(Json::Object(object, "".to_string()))
 }
 

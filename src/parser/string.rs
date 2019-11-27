@@ -80,6 +80,6 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::String(token))
+    Ok(Json::String(token, "".to_string()))
 }
 

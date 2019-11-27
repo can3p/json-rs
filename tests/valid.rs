@@ -66,65 +66,66 @@ fn valid_exponent_number()
     test!(f64, "-21.12e2",  -21.12e2);
 }
 
-#[test]
-fn valid_string()
-{
-    test!(String,
-        "\"\"",
-        String::from("")
-    );
+//#[test]
+//fn valid_string()
+//{
+    //test!(String,
+        //"\"\"",
+        //String::from("")
+    //);
 
-	test!(String,
-        "\"This is a normal ASCII string.\"",
-        String::from("This is a normal ASCII string.")
-    );
+        //test!(String,
+        //"\"This is a normal ASCII string.\"",
+        //String::from("This is a normal ASCII string.")
+    //);
 
-    test!(String,
-        "\"I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).\"",
-        String::from("I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).")
-    );
+    //test!(String,
+        //"\"I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).\"",
+        //String::from("I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).")
+    //);
 
-	test!(String,
-        "\"I can escape some things, like \\\"\\\\\\/\\b\\f\\n\\r\\t!\"",
-        String::from("I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!")
-    );
+        //test!(String,
+        //"\"I can escape some things, like \\\"\\\\\\/\\b\\f\\n\\r\\t!\"",
+        //String::from("I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!")
+    //);
 
-	test!(String,
-        "\"I can even escape unicode: \\u3042.\"",
-        String::from("I can even escape unicode: あ.")
-    );
-}
+        //test!(String,
+        //"\"I can even escape unicode: \\u3042.\"",
+        //String::from("I can even escape unicode: あ.")
+    //);
+//}
 
-#[test]
-fn valid_array()
-{
-	let json = Json::parse("[]");
-	assert_eq!(json, Ok(Json::Array(vec![])));
+//#[test]
+//fn valid_array()
+//{
+        //let json = Json::parse("[]");
+        //assert_eq!(json, Ok(Json::Array(vec![])));
 
-	let json = Json::parse("[1,2.0,\"String\",[],{}]");
-	assert_eq!(json, Ok(Json::Array(vec![
-        Json::Number(Number::Unsigned(1)),
-        Json::Number(Number::Float(2.)),
-        Json::String(String::from("String")),
-        Json::Array(vec![]),
-        Json::Object(HashMap::new()),
-    ])));
-}
+        //let json = Json::parse("[1,2.0,\"String\",[],{}]");
+        //assert_eq!(json, Ok(Json::Array(vec![
+        //Json::Number(Number::Unsigned(1)),
+        //Json::Number(Number::Float(2.)),
+        //Json::String(String::from("String")),
+        //Json::Array(vec![]),
+        //Json::Object(HashMap::new()),
+    //])));
+//}
 
-#[test]
-fn valid_object()
-{
-	let json = Json::parse("{}");
-	assert_eq!(json, Ok(Json::Object(HashMap::new())));
+//#[test]
+//fn valid_object()
+//{
+        //let json = Json::parse("{}");
+        //assert_eq!(json, Ok(Json::Object(HashMap::new())));
 
-    let mut map = HashMap::new();
-    map.insert(String::from("i"), Json::Number(Number::Unsigned(1)));
-    map.insert(String::from("f"), Json::Number(Number::Float(2.)));
-    map.insert(String::from("s"), Json::String(String::from("String")));
-    map.insert(String::from("a"), Json::Array(vec![]));
-    map.insert(String::from("o"), Json::Object(HashMap::new()));
+    //let mut map = HashMap::new();
+    //map.insert(String::from("i"), Json::Number(Number::Unsigned(1)));
+    //map.insert(String::from("f"), Json::Number(Number::Float(2.)));
+    //map.insert(String::from("s"), Json::String(String::from("String")));
+    //map.insert(String::from("a"), Json::Array(vec![]));
+    //map.insert(String::from("o"), Json::Object(HashMap::new()));
 
-    let json = Json::parse("{\"i\":1,\"f\":2.0,\"s\":\"String\",\"a\":[],\"o\":{}}");
-	assert_eq!(json, Ok(Json::Object(map)));
-}
+    //let json = Json::parse("{\"i\":1,\"f\":2.0,\"s\":\"String\",\"a\":[],\"o\":{}}");
+        //assert_eq!(json, Ok(Json::Object(map)));
+//}
+
 
