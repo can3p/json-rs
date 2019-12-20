@@ -6,6 +6,7 @@ use simple_json::Json;
 macro_rules! test {
     ($jsn:expr, $val:expr) => {{
         let json = Json::from($jsn);
+        println!("json - {:?}, val - {:?}", json, $val);
         assert_eq!(json.to_string(), $val);
     }};
 }
@@ -68,7 +69,7 @@ fn string_to_string()
 
 	test!(
         "I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!",
-        "\"I can escape some things, like \\\"\\/\u{0008}\u{000C}\n\r\t!\""
+        "\"I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!\""
     );
 
 	test!(
@@ -106,8 +107,13 @@ fn map_to_object()
     map.insert(String::from("a"), Json::from(vec![]));
     map.insert(String::from("o"), Json::from(HashMap::new()));
 
-    assert_eq!(
-        Json::from(map),
-        Json::parse("{\"i\":-1,\"f\":2.3,\"s\":\"String\",\"a\":[],\"o\":{}}").unwrap()
-    );
+    if let Json::Object(left, _) = Json::from(map) {
+        if let Json::Object(right, _) = Json::parse("{\"i\":-1,\"f\":2.3,\"s\":\"String\",\"a\":[],\"o\":{}}").unwrap() {
+            assert_eq!( left, right );
+        } else {
+            panic!("should not get there!");
+        }
+    } else {
+        panic!("should not get there!");
+    }
 }

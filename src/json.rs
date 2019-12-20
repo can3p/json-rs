@@ -51,69 +51,7 @@ impl Json {
 
     pub fn to_string(&self) -> String
     {
-        let mut string: String = String::new();
-
-        match self {
-            Json::Null(_) => {
-                string.push_str("null");
-            },
-            Json::Boolean(value, _) => {
-                string.push_str(
-                    if *value { "true"  }
-                    else      { "false" }
-                );
-            },
-            Json::Number(ref value, _) => {
-                string.push_str(value.to_string().as_str());
-            },
-            Json::String(ref value, _) => {
-                string.push('"');
-                for chr in value.chars() {
-                    if chr == '"' {
-                        string.push('\\');
-                    }
-                    string.push(chr);
-                }
-                string.push('"');
-            },
-            Json::Array(ref value, _) => {
-                let mut first = true;
-
-                string.push('[');
-                for elem in value {
-                    if !first {
-                        string.push(',');
-                    }
-                    string.push_str(elem.to_string().as_str());
-                    first = false;
-                }
-                string.push(']');
-            },
-            Json::Object(ref value, _) => {
-                let mut first = true;
-
-                string.push('{');
-                for (k, v) in value {
-                    if !first {
-                        string.push(',');
-                    }
-                    string.push('"');
-                    for chr in k.chars() {
-                        if chr == '"' {
-                            string.push('\\');
-                        }
-                        string.push(chr);
-                    }
-                    string.push('"');
-                    string.push(':');
-                    string.push_str(v.to_string().as_str());
-                    first = false;
-                }
-                string.push('}');
-            },
-        }
-
-        string
+        self.to_source()
     }
 }
 
@@ -121,7 +59,27 @@ impl From<HashMap<String, Json>> for Json
 {
     fn from(map: HashMap<String, Json>) -> Json
     {
-        Json::Object(map, "".to_string())
+        let mut source_string = String::new();
+        source_string.push('{');
+        let mut iterator = map.iter();
+        match iterator.next() {
+            Some((key, val)) => {
+                let part = format!("\"{}\":{}", key, &val.to_source());
+                source_string.push_str(&part);
+            },
+            None => {
+                source_string.push('}');
+                return Json::Object(map, source_string);
+            }
+        };
+
+        while let Some((key, val)) = iterator.next() {
+            let part = format!(",\"{}\":{}", key, &val.to_source());
+            source_string.push_str(&part);
+        }
+
+        source_string.push('}');
+        Json::Object(map, source_string)
     }
 }
 
@@ -129,7 +87,26 @@ impl From<Vec<Json>> for Json
 {
     fn from(vector: Vec<Json>) -> Json
     {
-        Json::Array(vector, "".to_string())
+        let mut source_string = String::new();
+        source_string.push('[');
+        let mut iterator = vector.iter();
+        match iterator.next() {
+            Some(val) => {
+                source_string.push_str(&val.to_source());
+            },
+            None => {
+                source_string.push(']');
+                return Json::Array(vector, source_string);
+            }
+        };
+
+        while let Some(val) = iterator.next() {
+            source_string.push(',');
+            source_string.push_str(&val.to_source());
+        }
+
+        source_string.push(']');
+        return Json::Array(vector, source_string);
     }
 }
 
@@ -137,7 +114,11 @@ impl From<String> for Json
 {
     fn from(string: String) -> Json
     {
-        Json::String(string, "".to_string())
+        let mut source_string = String::new();
+        source_string.push('\"');
+        source_string.push_str(&string);
+        source_string.push('\"');
+        Json::String(string, source_string)
     }
 }
 
@@ -145,7 +126,11 @@ impl<'a> From<&'a str> for Json
 {
     fn from(string: &'a str) -> Json
     {
-        Json::String(String::from(string), "".to_string())
+        let mut source_string = String::new();
+        source_string.push('\"');
+        source_string.push_str(&string);
+        source_string.push('\"');
+        Json::String(String::from(string), source_string)
     }
 }
 
@@ -153,7 +138,7 @@ impl From<u64> for Json
 {
     fn from(number: u64) -> Json
     {
-        Json::Number(Number::Unsigned(number), "".to_string())
+        Json::Number(Number::Unsigned(number), number.to_string())
     }
 }
 
@@ -161,7 +146,7 @@ impl From<i32> for Json
 {
     fn from(number: i32) -> Json
     {
-        Json::Number(Number::Integer(i64::from(number)), "".to_string())
+        Json::Number(Number::Integer(i64::from(number)), number.to_string())
     }
 }
 
@@ -169,7 +154,7 @@ impl From<i64> for Json
 {
     fn from(number: i64) -> Json
     {
-        Json::Number(Number::Integer(number), "".to_string())
+        Json::Number(Number::Integer(number), number.to_string())
     }
 }
 
@@ -177,7 +162,7 @@ impl From<f64> for Json
 {
     fn from(number: f64) -> Json
     {
-        Json::Number(Number::Float(number), "".to_string())
+        Json::Number(Number::Float(number), number.to_string())
     }
 }
 
@@ -185,7 +170,12 @@ impl From<bool> for Json
 {
     fn from(value: bool) -> Json
     {
-        Json::Boolean(value, "".to_string())
+        let source = match value {
+            true => "true",
+            false => "false",
+        };
+
+        Json::Boolean(value, source.to_string())
     }
 }
 
@@ -193,7 +183,7 @@ impl From<()> for Json
 {
     fn from(_: ()) -> Json
     {
-        Json::Null("".to_string())
+        Json::Null("null".to_string())
     }
 }
 
