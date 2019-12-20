@@ -25,7 +25,7 @@ pub fn node(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
             'f' | 't' => {
                 content = boolean(slice);
             },
-            '0'...'9' | '-' => {
+            '0'..='9' | '-' => {
                 content = number(slice);
             },
             '"' => {

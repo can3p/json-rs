@@ -60,9 +60,9 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 },
             },
             Stages::EscapedUnicode => match current {
-                '0'...'9' => { unicode.push(current); slice.next(); },
-                'A'...'F' => { unicode.push(current); slice.next(); },
-                'a'...'f' => { unicode.push(current); slice.next(); },
+                '0'..='9' => { unicode.push(current); slice.next(); },
+                'A'..='F' => { unicode.push(current); slice.next(); },
+                'a'..='f' => { unicode.push(current); slice.next(); },
                 _ => { stage = Stages::AfterUnicode; }
             },
             Stages::AfterUnicode => {
