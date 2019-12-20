@@ -113,21 +113,20 @@ fn valid_array()
     ], "[1,2.0,\"String\",[],{}]".to_string())));
 }
 
-//#[test]
-//fn valid_object()
-//{
-        //let json = Json::parse("{}");
-        //assert_eq!(json, Ok(Json::Object(HashMap::new())));
+#[test]
+fn valid_object()
+{
+        let json = Json::parse("{}");
+        assert_eq!(json, Ok(Json::Object(HashMap::new(), "{}".to_string())));
 
-    //let mut map = HashMap::new();
-    //map.insert(String::from("i"), Json::Number(Number::Unsigned(1)));
-    //map.insert(String::from("f"), Json::Number(Number::Float(2.)));
-    //map.insert(String::from("s"), Json::String(String::from("String")));
-    //map.insert(String::from("a"), Json::Array(vec![]));
-    //map.insert(String::from("o"), Json::Object(HashMap::new()));
+    let mut map = HashMap::new();
+    map.insert(String::from("i"), Json::Number(Number::Unsigned(1), "1".to_string()));
+    map.insert(String::from("f"), Json::Number(Number::Float(2.), "2.0".to_string()));
+    map.insert(String::from("s"), Json::String(String::from("String"), "\"String\"".to_string()));
+    map.insert(String::from("a"), Json::Array(vec![], "[]".to_string()));
+    map.insert(String::from("o"), Json::Object(HashMap::new(), "{}".to_string()));
 
-    //let json = Json::parse("{\"i\":1,\"f\":2.0,\"s\":\"String\",\"a\":[],\"o\":{}}");
-        //assert_eq!(json, Ok(Json::Object(map)));
-//}
-
-
+    let original = "{\"i\":1,\"f\":2.0,\"s\":\"String\",\"a\":[],\"o\":{}}";
+    let json = Json::parse(original);
+        assert_eq!(json, Ok(Json::Object(map, original.to_string())));
+}

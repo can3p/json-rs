@@ -29,8 +29,6 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
             None      => { break 'tokenizer },
         };
 
-        println!("{} - {:?} - {:?}", source, stage, current);
-
         match stage {
             Stages::Start => match current {
                 '"'       => { stage = Stages::Unescaped; slice.next(); },
