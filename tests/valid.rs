@@ -76,7 +76,7 @@ fn valid_string()
         String::from("")
     );
 
-        test!(String,
+    test!(String,
         "\"This is a normal ASCII string.\"",
         String::from("This is a normal ASCII string.")
     );
@@ -86,12 +86,12 @@ fn valid_string()
         String::from("I can also use unicode: ٩(-̮̮̃-̃)۶ ٩(●̮̮̃•̃)۶ ٩(͡๏̯͡๏)۶ ٩(-̮̮̃•̃).")
     );
 
-        test!(String,
+    test!(String,
         "\"I can escape some things, like \\\"\\\\\\/\\b\\f\\n\\r\\t!\"",
         String::from("I can escape some things, like \"\\/\u{0008}\u{000C}\n\r\t!")
     );
 
-        test!(String,
+    test!(String,
         "\"I can even escape unicode: \\u3042.\"",
         String::from("I can even escape unicode: あ.")
     );

@@ -29,6 +29,8 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
             None      => { break 'tokenizer },
         };
 
+        println!("{} - {:?} - {:?}", source, stage, current);
+
         match stage {
             Stages::Start => match current {
                 '"'       => { stage = Stages::Unescaped; slice.next(); },
@@ -63,7 +65,12 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 '0'..='9' => { unicode.push(current); slice.next(); },
                 'A'..='F' => { unicode.push(current); slice.next(); },
                 'a'..='f' => { unicode.push(current); slice.next(); },
-                _ => { stage = Stages::AfterUnicode; }
+                _ => {
+                    stage = Stages::AfterUnicode;
+                    // skip so that current character does not get to source,
+                    // since slice is not moved
+                    continue;
+                }
             },
             Stages::AfterUnicode => {
                 if unicode.len() != 4 {
@@ -74,16 +81,16 @@ pub fn string(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 token.push(char::from_u32(code).unwrap());
 
                 stage = Stages::Unescaped;
+                // skip so that current character does not get to source,
+                // since slice is not moved
+                continue;
             },
             Stages::End => match current {
                 _ => { break 'tokenizer; },
             },
         }
 
-        if stage != Stages::AfterUnicode {
-            source.push(current);
-        }
-        println!("{} - {:?}", source, stage);
+        source.push(current);
     }
 
     Ok(Json::String(token, source))
