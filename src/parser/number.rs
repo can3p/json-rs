@@ -33,8 +33,6 @@ pub fn number(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
             None      => { break 'tokenizer },
         };
 
-        source.push(current);
-
         match stage {
             // Waiting for sign or number.
             Stages::Sign => match current {
@@ -109,6 +107,8 @@ pub fn number(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                 _         => { break 'tokenizer; },
             },
         }
+
+        source.push(current);
     }
 
     Ok(Json::Number(

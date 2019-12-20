@@ -97,21 +97,21 @@ fn valid_string()
     );
 }
 
-//#[test]
-//fn valid_array()
-//{
-        //let json = Json::parse("[]");
-        //assert_eq!(json, Ok(Json::Array(vec![])));
+#[test]
+fn valid_array()
+{
+        let json = Json::parse("[]");
+        assert_eq!(json, Ok(Json::Array(vec![], "[]".to_string())));
 
-        //let json = Json::parse("[1,2.0,\"String\",[],{}]");
-        //assert_eq!(json, Ok(Json::Array(vec![
-        //Json::Number(Number::Unsigned(1)),
-        //Json::Number(Number::Float(2.)),
-        //Json::String(String::from("String")),
-        //Json::Array(vec![]),
-        //Json::Object(HashMap::new()),
-    //])));
-//}
+        let json = Json::parse("[1,2.0,\"String\",[],{}]");
+        assert_eq!(json, Ok(Json::Array(vec![
+        Json::Number(Number::Unsigned(1), "1".to_string()),
+        Json::Number(Number::Float(2.), "2.0".to_string()),
+        Json::String(String::from("String"), "\"String\"".to_string()),
+        Json::Array(vec![], "[]".to_string()),
+        Json::Object(HashMap::new(), "{}".to_string()),
+    ], "[1,2.0,\"String\",[],{}]".to_string())));
+}
 
 //#[test]
 //fn valid_object()

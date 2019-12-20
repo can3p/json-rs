@@ -18,6 +18,7 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         End,
     }
 
+    let mut source      = String::new();
     let mut stage = Stages::Start;
 
     'tokenizer: loop {
@@ -28,7 +29,11 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
 
         match stage {
             Stages::Start => match current {
-                '[' => { stage = Stages::FirstValue; slice.next(); },
+                '[' => {
+                    stage = Stages::FirstValue;
+                    slice.next();
+                    source.push(current);
+                },
 
                 // Waiting for quotation mark.
                 _ => {
@@ -45,11 +50,17 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                         Err(e)   => { return Err(e) },
                     };
 
+                    source.push_str(&node.to_source());
+
                     array.push(node);
                 },
             },
             Stages::Comma => match current {
-                ',' => { stage = Stages::Value; slice.next(); },
+                ',' => {
+                    stage = Stages::Value;
+                    slice.next();
+                    source.push(current);
+                },
                 ']' => { stage = Stages::End; },
 
                 // Waiting for valid escape code.
@@ -64,11 +75,16 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
                     Ok(node) => node,
                     Err(e)   => { return Err(e) },
                 };
+                source.push_str(&node.to_source());
 
                 array.push(node);
             },
             Stages::End => match current {
-                ']' => { slice.next(); break 'tokenizer; },
+                ']' => {
+                    slice.next();
+                    source.push(current);
+                    break 'tokenizer;
+                },
                 // Waiting for valid escape code.
                 _ => {
                     return Err(Error::InvalidCharacter(current.to_string()));
@@ -77,6 +93,6 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::Array(array, "".to_string()))
+    Ok(Json::Array(array, source))
 }
 

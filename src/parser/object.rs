@@ -91,6 +91,6 @@ pub fn object(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         }
     }
 
-    Ok(Json::Object(object, "".to_string()))
+    Ok(Json::Object(object, "{}".to_string()))
 }
 

@@ -13,6 +13,7 @@ pub enum Json {
     Number(Number, String),
     Boolean(bool, String),
     Null(String),
+//    Whitespace(String),
 }
 
 impl Json {
