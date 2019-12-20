@@ -100,10 +100,10 @@ fn valid_string()
 #[test]
 fn valid_array()
 {
-        let json = Json::parse("[]");
-        assert_eq!(json, Ok(Json::Array(vec![], "[]".to_string())));
+    let json = Json::parse("[]");
+    assert_eq!(json, Ok(Json::Array(vec![], "[]".to_string())));
 
-        let json = Json::parse("[1,2.0,\"String\",[],{}]");
+    let json = Json::parse("[1,2.0,\"String\",[],{}]");
         assert_eq!(json, Ok(Json::Array(vec![
         Json::Number(Number::Unsigned(1), "1".to_string()),
         Json::Number(Number::Float(2.), "2.0".to_string()),
@@ -111,22 +111,29 @@ fn valid_array()
         Json::Array(vec![], "[]".to_string()),
         Json::Object(HashMap::new(), "{}".to_string()),
     ], "[1,2.0,\"String\",[],{}]".to_string())));
+
+    let original = "[  1  ,  1  ]";
+    let json = Json::parse(original);
+    assert_eq!(json, Ok(Json::Array(vec![
+        Json::Number(Number::Unsigned(1), "1".to_string()),
+        Json::Number(Number::Unsigned(1), "1".to_string()),
+    ], original.to_string())));
 }
 
 #[test]
 fn valid_object()
 {
-        let json = Json::parse("{}");
-        assert_eq!(json, Ok(Json::Object(HashMap::new(), "{}".to_string())));
+    let json = Json::parse("{}");
+    assert_eq!(json, Ok(Json::Object(HashMap::new(), "{}".to_string())));
 
     let mut map = HashMap::new();
     map.insert(String::from("i"), Json::Number(Number::Unsigned(1), "1".to_string()));
     map.insert(String::from("f"), Json::Number(Number::Float(2.), "2.0".to_string()));
     map.insert(String::from("s"), Json::String(String::from("String"), "\"String\"".to_string()));
-    map.insert(String::from("a"), Json::Array(vec![], "[]".to_string()));
-    map.insert(String::from("o"), Json::Object(HashMap::new(), "{}".to_string()));
+    map.insert(String::from("a"), Json::Array(vec![], "[  ]".to_string()));
+    map.insert(String::from("o"), Json::Object(HashMap::new(), "{   }".to_string()));
 
-    let original = "{\"i\":1,\"f\":2.0,\"s\":\"String\",\"a\":[],\"o\":{}}";
+    let original = "{   \"i\":1,   \"f\":2.0,   \"s\":\"String\",\"a\":[  ]  ,  \"o\":{   }}";
     let json = Json::parse(original);
-        assert_eq!(json, Ok(Json::Object(map, original.to_string())));
+    assert_eq!(json, Ok(Json::Object(map, original.to_string())));
 }

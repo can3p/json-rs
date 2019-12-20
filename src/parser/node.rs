@@ -16,9 +16,6 @@ pub fn node(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
         };
 
         match current {
-            ' ' | '\r' | '\n' | '\t' => {
-                slice.next();
-            },
             'n' => {
                 content = null(slice);
             },

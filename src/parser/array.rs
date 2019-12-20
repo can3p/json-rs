@@ -27,6 +27,17 @@ pub fn array(slice: &mut Peekable<&mut Chars>) -> Result<Json, Error>
             None      => { break 'tokenizer },
         };
 
+        // absorb all whitespace into the array source
+        match current {
+            ' ' | '\r' | '\n' | '\t' => {
+                source.push(current);
+                slice.next();
+                continue;
+            },
+
+            _ => {}
+        };
+
         match stage {
             Stages::Start => match current {
                 '[' => {
